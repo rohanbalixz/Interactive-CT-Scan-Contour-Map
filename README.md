@@ -27,4 +27,4 @@ THIS IS A SAMPLE:
 ```
 
 
-<img src='./img/Exercise.png' width='400px' />
+<img src='./Screenshot 2025-04-21 at 13.54.29.png' width='400px' />
