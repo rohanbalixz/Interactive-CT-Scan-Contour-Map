@@ -1,17 +1,29 @@
-## Interactive Heatmap Data Visualization Exercise
+# Interactive Heatmap Data Visualization Exercise
 
-### Visualization of CT scan images using Contour Map
-The objective of this assignment 
-to exercise the method used in the eye tracking example's 
-heatmap to make an interactive visualization to generate heatmap based on 
-different binning and filtering methods.
+This project demonstrates how to build an **interactive CT‑scan contour heatmap** using D3.js. Drawing inspiration from the eye‑tracking heatmap example, you’ll learn to:
 
-## Requirements 
+- Load and parse flat CSV data of CT scan intensities  
+- Generate contour levels with variable bin counts  
+- Apply a real‑time slider filter to exclude low‑intensity regions  
 
-1. Use the data in the data folder (Data_CT.csv)
-2. Refer to the code provided on Heatmap for Earth Temperature Example.  
-3. Modify the code such that you can generate the visualization below: (10 points)
-4. Add a slider to filter out the values  (10 points)
+## Features
+
+1. **Dynamic Binning**  
+   Adjust the number of contour levels on the fly to explore fine‑ and coarse‑grained structures.  
+2. **Intensity Thresholding**  
+   Use a slider to set a minimum intensity cutoff—automatically hides all contours below your threshold.  
+3. **Diverging Color Scale**  
+   Seamlessly transition from blue (low) → white (mid) → red (high) intensities via D3’s `interpolateRdBu`.  
+4. **Offline‑Capable**  
+   Runs entirely in the browser with a local copy of `d3.js`; no external dependencies.
+
+## Getting Started
+
+1. **Clone the repo**  
+   ```bash
+   git clone https://github.com/umassdgithub/Week-12-Contours.git
+   cd Week-12-Contours/Major-Assignment-4
+
 ```
         const contours = d3.contours()
             .size([m, n])
