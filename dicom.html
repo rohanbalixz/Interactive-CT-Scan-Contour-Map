@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Geospatial Contour Example 02</title>
+
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+
+
+    <style>
+        body{
+            font-family: sans-serif;
+            margin: 0;
+
+        }
+        #time
+        {
+            position: absolute;
+            top:15px;
+            left: 15px;
+            font-family: sans-serif;
+            font-size: 12pt;
+        }
+        .legend_text{
+            font-family: sans-serif;
+            font-size: 5pt;
+        }
+        .container{
+            display:flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        #slider-range{
+            width: 30vw;
+        }
+        #canvas{
+            width: 30vw;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div id="canvas">
+        <svg viewbox="0 0 600 600"></svg>
+    </div>
+<div>
+        <label for="amount">Min Max</label>
+        <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+    <div id="slider-range"></div>
+</div>
+
+</div>
+
+
+
+
+<script>
+
+    const dicomFile = './data/Data_CT.csv'; //  abstracted data file
+
+    let svg = d3.select("svg");
+
+
+    // min max temperature read during 2018
+    const min_temp =0;
+    const max_temp = 2000;
+
+    // path generator
+
+
+    const path = d3.geoPath();
+
+
+
+    function plot_contour(fileName)
+    {
+        // Step 1 read csv file
+        d3.csv(fileName).then( (data)=>
+        {
+            // data dimensions
+            let m= 512, n= 512;
+
+            // Step 2 convert data into 1D list
+            let values_density= [];
+
+            data.forEach(d=>values_density.push(+d[0]))
+
+            $( "#slider-range" ).slider({
+                range: true,
+                min: 0,
+                max: 500,
+                values: [ 75, 300 ],
+                slide: function( event, ui ) {
+                    $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+                    //console.log( ui.values[ 0 ], ui.values[ 1 ])
+                    update( ui.values[ 0 ],ui.values[ 1 ])
+                }
+            })
+            update(20,100)
+            function update(min_val,max_val){
+                /////////////////COLOR CODING/////////////////////////////
+                let colors = d3.scaleLinear()
+                    .domain(d3.range(min_temp,max_temp, parseInt(Math.abs(max_temp-min_temp)/6.5)))
+                    .range(["#0d1a50", "#3e5eba", "#2b83ba", "#abdda4", "#ffffbf", "#fdae61", "#d7191c"])
+                    .interpolate(d3.interpolateHcl);
+
+                ///////////////////////////////////////////////////////////
+                // Step 3 contour generator
+                let contours = d3.contours()
+                    .size([m, n])
+                    .thresholds(d3.range(min_val,max_val,40)) // threshold is 6 degrees
+                    (values_density);
+
+                // Step 3 append contour to path (d)
+                svg.append("g")
+                    .attr("class","contours")
+
+                    .selectAll("path")
+                    .data(contours)
+                    .enter()
+                    .append("path")
+                    .attr("d",function(d){return path(d)})
+                    .attr("stroke","black")
+                    .attr("stroke-width",".1px")
+                    .attr("stroke-linejoin", "round")
+                    .attr("fill",  d=> colors(d.value))
+            }
+
+        })
+
+    }
+
+    plot_contour(dicomFile)
+
+</script>
+</body>
+</html>

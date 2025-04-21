@@ -1,7 +1,7 @@
 ## Interactive Heatmap Data Visualization Exercise
 
 ### Visualization of CT scan images using Contour Map
-The objective is
+The objective of this assignment 
 to exercise the method used in the eye tracking example's 
 heatmap to make an interactive visualization to generate heatmap based on 
 different binning and filtering methods.
